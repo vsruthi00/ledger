@@ -46,13 +46,7 @@ After `ledger init` your project contains:
    git clone git@github.com:vsruthi00/ledger.git
    ```
 
-2. In your project's Claude Code settings, add the skill. The entry point is:
-
-   ```
-   adapters/claude-code/SKILL.md
-   ```
-
-   Point the `skills` (or equivalent) config key at that file.
+2. Make the skill discoverable by Claude Code. The skill entry point is `adapters/claude-code/SKILL.md`, and it reads its procedures from the repo's `core/` directory, so keep the repo intact rather than copying the SKILL.md alone. Place or symlink the repo where Claude Code looks for skills (your Claude Code skills directory, for example `~/.claude/skills/ledger/`, or a plugin you load). Confirm `ledger` shows up in your available skills before continuing.
 
 3. Use the three commands in your sessions:
 
