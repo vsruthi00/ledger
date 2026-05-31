@@ -38,6 +38,23 @@ After `ledger init` your project contains:
     sessions.md     # append-only session record
 ```
 
+## Structure
+
+This repo (the skill itself, distinct from the `.ledger/` library it creates in a project):
+
+```
+ledger/
+  SKILL.md            # Claude Code entry point (the skill loads from here)
+  core/               # platform-agnostic procedures and templates
+    flow/             # init, orient, handoff, shard-selection
+    prompts/          # kickoff-generator, shard-split, you-are-here
+    schema/           # index, roadmap, session-log, shard templates
+  README.md
+  LICENSE
+```
+
+`SKILL.md` is the Claude Code entry point and reads everything it needs from `core/`. The `core/` directory is platform-agnostic. ledger has no platform-specific runtime code, so there are no extra adapter assets; future adapters for other agents would live under `adapters/<platform>/`.
+
 ## Install
 
 1. Clone this repo:
@@ -46,7 +63,13 @@ After `ledger init` your project contains:
    git clone git@github.com:vsruthi00/ledger.git
    ```
 
-2. Make the skill discoverable by Claude Code. The skill entry point is `adapters/claude-code/SKILL.md`, and it reads its procedures from the repo's `core/` directory, so keep the repo intact rather than copying the SKILL.md alone. Place or symlink the repo where Claude Code looks for skills (your Claude Code skills directory, for example `~/.claude/skills/ledger/`, or a plugin you load). Confirm `ledger` shows up in your available skills before continuing.
+2. Make the skill discoverable by Claude Code. Claude Code loads a personal skill from `~/.claude/skills/<name>/SKILL.md`. The entry point `SKILL.md` lives at this repo's root and reads its procedures from `core/`, so symlink the whole repo (keeping it intact) into your skills directory:
+
+   ```
+   ln -s "$(pwd)" ~/.claude/skills/ledger
+   ```
+
+   Confirm `ledger` shows up in your available skills before continuing. (If you prefer not to symlink, copy the repo to `~/.claude/skills/ledger/` instead.)
 
 3. Use the three commands in your sessions:
 
@@ -60,6 +83,10 @@ After `ledger init` your project contains:
 
 PolyForm Perimeter 1.0.0. Free for any use including commercial projects. You may not repackage and sell ledger itself as a competing product. See [LICENSE](LICENSE) for the full terms.
 
-## Portability
+## Adapters and Other Agents
 
-ledger is built entirely on Claude Code primitives: a `SKILL.md` entry point and standard file-read/write tools. No scripts, no daemons. Cursor and Codex adapters are planned for a future release.
+ledger is built entirely on portable primitives: a `SKILL.md` entry point and standard file-read/write operations. No scripts, no daemons.
+
+**Claude Code (available now):** install as above. The root `SKILL.md` is the entry point and reads its procedures from `core/`.
+
+**Cursor, Codex, Gemini (planned):** each will get an adapter under `adapters/<platform>/` that points at the same `core/`. To add one, write that platform's skill or command entry so it runs the `core/flow/*.md` procedures (init, orient, handoff) and uses the `core/schema/*.template.md` files, exactly as `SKILL.md` describes. The `core/` directory does not change. These adapters are not built yet; the seam is in place so they are a small addition rather than a rewrite.
