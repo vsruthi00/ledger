@@ -2,6 +2,16 @@
 
 ledger is a Claude Code skill that replaces a single growing handoff file with a sharded project-memory library. A thin always-loaded index describes every concern at a glance; separate shard files hold the detail. Each session and each subagent loads only the index plus the shards it actually needs, keeping context windows small and relevant without sacrificing continuity.
 
+## The Council Suite
+
+ledger is one of three companion Claude Code skills that take a unit of work from decision to shipped. Each works on its own; together they compose.
+
+- **[council](https://github.com/vsruthi00/council)** - convene a panel of specialist roles to deliberate a decision and produce a ranked decision record with recorded dissent and hard vetoes.
+- **[cadence](https://github.com/vsruthi00/cadence)** - carry a decision through planning, execution, re-invocation, and a security gate while keeping the context window economical.
+- **ledger** (this repo) - replace a single growing handoff file with a sharded project-memory library, so each session and subagent loads only the shards it needs.
+
+council decides; cadence drives the resulting work and re-invokes council when something changes; ledger preserves continuity across sessions.
+
 ## How It Works
 
 ```mermaid
